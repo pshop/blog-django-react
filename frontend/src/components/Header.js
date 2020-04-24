@@ -6,7 +6,7 @@ import {signIn} from "../actions";
 class Header extends Component {
 
   componentDidMount() {
-    if (!this.props.loginInfos.isSignedIn) {
+    if (!this.props.loginInfos.isSignedIn && localStorage.getItem('access_token')) {
       this.props.signIn()
     }
   }

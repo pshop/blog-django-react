@@ -1,5 +1,9 @@
 import _ from 'lodash';
-import axios from 'axios'
+import {
+  axiosGetPosts,
+  axiosGetUser,
+  axiosLoginUser
+} from "../axiosApi/apiCalls";
 import jwtDecode from 'jwt-decode'
 
 import {baseURL, axiosInstance} from "../axiosApi";
@@ -17,35 +21,35 @@ export const getPostsAndUsers = () => async (dispatch, getState) => {
 }
 
 export const getPosts = () => async dispatch => {
-  const response = await axios.get(baseURL+'blogposts')
+  const response = await axiosGetPosts()
   dispatch({type: GET_POSTS, payload: response.data})
 }
 
 export const getUser = (id) => async dispatch => {
-  const response = await axios.get(baseURL+'user/public/'+id)
+  const response = await axiosGetUser(id)
   dispatch({type: GET_USER, payload: response.data})
 }
 
-export const signIn = (username="", password="") => async dispatch => {
-  
-  if (localStorage.getItem('access_token') && localStorage.getItem('refresh_token')){
+export const signIn = (username = "", password = "") => async dispatch => {
+
+  if (localStorage.getItem('access_token') && localStorage.getItem('refresh_token')) {
     const access = localStorage.getItem('access_token')
     const refresh = localStorage.getItem('refresh_token')
     const payload = {access, refresh}
     dispatch({type: USER_LOGIN, payload})
   } else {
-    try {
-      const response = await axiosInstance.post('/token/obtain', {
-        username: username,
-        password: password
-      });
-      axiosInstance.defaults.headers['Authorization'] = "Bearer " + response.data.access;
+    const response = await axiosLoginUser(username, password)
+    if (response.data) {
       localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh)
-      dispatch({type: USER_LOGIN, payload: response.data})
-    } catch (e) {
-      dispatch({type: USER_LOGIN_FAIL, payload: e})
-      throw e
+      localStorage.setItem('refresh_token', response.data.refresh);
+      if (response.status === 200) {
+        dispatch({type: USER_LOGIN, payload: response.data})
+      } else {
+        dispatch({type: USER_LOGIN_FAIL, payload: response})
+      }
     }
+
+
   }
+  console.log("hello i guess")
 }
