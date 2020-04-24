@@ -1,7 +1,17 @@
 import { combineReducers } from 'redux';
-import {GET_USER, GET_POSTS, USER_LOGIN_FAIL, USER_LOGIN} from "../actions/actionsTypes";
+import {
+  GET_USER,
+  GET_POSTS,
+  GET_USER_INFOS,
+  USER_LOGIN_FAIL,
+  USER_LOGIN} from "../actions/actionsTypes";
 
 import jwtDecode from 'jwt-decode'
+
+const USERS_INITIAL_STATE = {
+  users_list: [],
+  current_user: {}
+}
 
 const LOGIN_INITIAL_STATE = {
   isSignedIn: null,
@@ -17,10 +27,12 @@ const postsReducer = (state = [], action) => {
   }
 };
 
-const usersReducer = (state = [], action) => {
+const usersReducer = (state = USERS_INITIAL_STATE, action) => {
   switch (action.type) {
     case GET_USER:
-      return [...state, action.payload]
+      return {...state, users_list: [...state.users_list, action.payload]}
+    case GET_USER_INFOS:
+      return {...state, current_user: action.payload}
     default:
       return state;
   }

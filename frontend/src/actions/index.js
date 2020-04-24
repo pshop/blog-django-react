@@ -8,7 +8,13 @@ import jwtDecode from 'jwt-decode'
 
 import {baseURL, axiosInstance} from "../axiosApi";
 
-import {GET_POSTS, GET_USER, USER_LOGIN, USER_LOGIN_FAIL} from "./actionsTypes";
+import {
+  GET_POSTS,
+  GET_USER,
+  GET_USER_INFOS,
+  USER_LOGIN,
+  USER_LOGIN_FAIL
+} from "./actionsTypes";
 
 
 export const getPostsAndUsers = () => async (dispatch, getState) => {
@@ -31,25 +37,30 @@ export const getUser = (id) => async dispatch => {
 }
 
 export const signIn = (username = "", password = "") => async dispatch => {
-
+  let payload = null
+  // if user already has a key stored
   if (localStorage.getItem('access_token') && localStorage.getItem('refresh_token')) {
     const access = localStorage.getItem('access_token')
     const refresh = localStorage.getItem('refresh_token')
-    const payload = {access, refresh}
-    dispatch({type: USER_LOGIN, payload})
+    payload = {access, refresh}
   } else {
     const response = await axiosLoginUser(username, password)
     if (response.data) {
       localStorage.setItem('access_token', response.data.access);
       localStorage.setItem('refresh_token', response.data.refresh);
-      if (response.status === 200) {
-        dispatch({type: USER_LOGIN, payload: response.data})
-      } else {
+      if (response.status !== 200) {
         dispatch({type: USER_LOGIN_FAIL, payload: response})
+        throw response
+      } else {
+        payload = {access: response.data.access, refresh: response.data.refresh}
       }
     }
-
-
   }
-  console.log("hello i guess")
+  if (payload) {
+    dispatch({type: USER_LOGIN, payload})
+    const response = await axiosGetUser(jwtDecode(payload.access).user_id)
+    dispatch({type: GET_USER_INFOS, payload: response.data})
+  } else {
+    throw "An error occured"
+  }
 }

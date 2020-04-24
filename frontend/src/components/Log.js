@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
 import {signIn} from "../actions";
@@ -20,7 +20,7 @@ class Log extends Component {
     this.props.signIn(this.state.username, this.state.password)
   }
 
-  render() {
+  renderLoginForm = () => {
     return (
       <div className={"container LoginForm mt-3"}>
         <form className={"container col-lg-4"} onSubmit={this.onSubmit}>
@@ -50,12 +50,33 @@ class Log extends Component {
           </button>
         </form>
       </div>
+    )
+  }
+
+  renderLogoutForm = () => {
+    return(
+      <h1>{this.props.user.username}</h1>
+    )
+  }
+
+  renderForm = () => {
+    if (this.props.loginInfos.isSignedIn){
+      return this.renderLogoutForm()
+    } else {
+      return this.renderLoginForm()
+    }
+  }
+
+  render() {
+    return (
+      <Fragment>{this.renderForm()}</Fragment>
     );
   }
 }
 
 const mapStateToProps = state => {
-  return {loginInfos: state.login}
+  return {loginInfos: state.login,
+  user: state.users.current_user}
 }
 
 
