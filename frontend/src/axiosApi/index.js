@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const baseURL = 'http://127.0.0.1:8000/api/'
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
     baseURL: baseURL,
     timeout: 5000,
     headers: {
@@ -11,6 +11,7 @@ const axiosInstance = axios.create({
         'accept': 'application/json'
     }
 });
+
 axiosInstance.interceptors.response.use(
     response => response,
     error => {
@@ -22,7 +23,7 @@ axiosInstance.interceptors.response.use(
           return axiosInstance
               .post('/token/refresh/', {refresh: refresh_token})
               .then((response) => {
-
+                  console.log('Accesse token auto refresh')
                   localStorage.setItem('access_token', response.data.access);
                   localStorage.setItem('refresh_token', response.data.refresh);
 
@@ -32,6 +33,7 @@ axiosInstance.interceptors.response.use(
                   return axiosInstance(originalRequest);
               })
               .catch(err => {
+                  console.log('FAILED: Accesse token auto refresh')
                   console.log(err)
               });
       }

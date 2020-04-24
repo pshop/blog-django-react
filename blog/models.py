@@ -8,3 +8,6 @@ class BlogPost(models.Model):
     content = models.TextField()
     publication_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     author = models.ForeignKey('authentication.CustomUser', on_delete=models.CASCADE, related_name="posts")
+
+    class Meta:
+        ordering = ['-publication_date']
