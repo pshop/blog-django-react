@@ -2,7 +2,8 @@ import _ from 'lodash';
 import {
   axiosGetPosts,
   axiosGetUser,
-  axiosLoginUser
+  axiosLoginUser,
+  axiosLogoutUser,
 } from "../axiosApi/apiCalls";
 import jwtDecode from 'jwt-decode'
 
@@ -12,7 +13,9 @@ import {
   GET_POSTS,
   GET_USER,
   GET_USER_INFOS,
+  DEL_USER_INFOS,
   USER_LOGIN,
+  USER_LOGOUT,
   USER_LOGIN_FAIL
 } from "./actionsTypes";
 
@@ -62,5 +65,13 @@ export const signIn = (username = "", password = "") => async dispatch => {
     dispatch({type: GET_USER_INFOS, payload: response.data})
   } else {
     throw "An error occured"
+  }
+}
+
+export const signOut = () => async dispatch => {
+  const response = await axiosLogoutUser()
+  if (response.status === 205){
+    dispatch({type: USER_LOGOUT})
+    dispatch({type: DEL_USER_INFOS})
   }
 }

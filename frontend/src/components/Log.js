@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
-import {signIn} from "../actions";
+import {signIn, signOut} from "../actions";
 
 
 class Log extends Component {
@@ -18,6 +18,10 @@ class Log extends Component {
   onSubmit = (e) => {
     e.preventDefault()
     this.props.signIn(this.state.username, this.state.password)
+  }
+
+  handleLogout = () => {
+    this.props.signOut()
   }
 
   renderLoginForm = () => {
@@ -54,13 +58,17 @@ class Log extends Component {
   }
 
   renderLogoutForm = () => {
-    return(
-      <h1>{this.props.user.username}</h1>
+    return (
+      <div className={'container text-center mt-3'}>
+        <h1>Hello {this.props.user.username}</h1>
+        <p>Click to button bellow to logout</p>
+        <button type="button" className="btn btn-danger" onClick={this.handleLogout}>Logout</button>
+      </div>
     )
   }
 
   renderForm = () => {
-    if (this.props.loginInfos.isSignedIn){
+    if (this.props.loginInfos.isSignedIn) {
       return this.renderLogoutForm()
     } else {
       return this.renderLoginForm()
@@ -75,11 +83,13 @@ class Log extends Component {
 }
 
 const mapStateToProps = state => {
-  return {loginInfos: state.login,
-  user: state.users.current_user}
+  return {
+    loginInfos: state.login,
+    user: state.users.current_user
+  }
 }
 
 
 export default connect(
   mapStateToProps,
-  {signIn})(Log)
+  {signIn, signOut})(Log)

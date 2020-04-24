@@ -3,8 +3,10 @@ import {
   GET_USER,
   GET_POSTS,
   GET_USER_INFOS,
+  DEL_USER_INFOS,
   USER_LOGIN_FAIL,
-  USER_LOGIN} from "../actions/actionsTypes";
+  USER_LOGIN, USER_LOGOUT
+} from "../actions/actionsTypes";
 
 import jwtDecode from 'jwt-decode'
 
@@ -33,6 +35,8 @@ const usersReducer = (state = USERS_INITIAL_STATE, action) => {
       return {...state, users_list: [...state.users_list, action.payload]}
     case GET_USER_INFOS:
       return {...state, current_user: action.payload}
+    case DEL_USER_INFOS:
+      return USERS_INITIAL_STATE
     default:
       return state;
   }
@@ -46,6 +50,9 @@ const loginReducer = (state = LOGIN_INITIAL_STATE, action)=>{
         isSignedIn: true,
         userId: token.user_id,
       }
+    case USER_LOGOUT:
+      console.log("LOGOUT compoenent")
+      return LOGIN_INITIAL_STATE
     default:
       return state
   }
