@@ -1,12 +1,6 @@
 import { combineReducers } from 'redux';
-import {
-  GET_USER,
-  GET_POSTS,
-  GET_USER_INFOS,
-  DEL_USER_INFOS,
-  USER_LOGIN_FAIL,
-  USER_LOGIN, USER_LOGOUT
-} from "../actions/actionsTypes";
+
+import * as actionType from "../actions/actionsTypes"
 
 import jwtDecode from 'jwt-decode'
 
@@ -22,8 +16,10 @@ const LOGIN_INITIAL_STATE = {
 
 const postsReducer = (state = [], action) => {
   switch (action.type) {
-    case GET_POSTS:
+    case actionType.GET_POSTS:
       return action.payload;
+    case actionType.POST_POST:
+      return state
     default:
       return state;
   }
@@ -31,11 +27,11 @@ const postsReducer = (state = [], action) => {
 
 const usersReducer = (state = USERS_INITIAL_STATE, action) => {
   switch (action.type) {
-    case GET_USER:
+    case actionType.GET_USER:
       return {...state, users_list: [...state.users_list, action.payload]}
-    case GET_USER_INFOS:
+    case actionType.GET_USER_INFOS:
       return {...state, current_user: action.payload}
-    case DEL_USER_INFOS:
+    case actionType.DEL_USER_INFOS:
       return USERS_INITIAL_STATE
     default:
       return state;
@@ -44,13 +40,13 @@ const usersReducer = (state = USERS_INITIAL_STATE, action) => {
 
 const loginReducer = (state = LOGIN_INITIAL_STATE, action)=>{
   switch (action.type) {
-    case USER_LOGIN:
+    case actionType.USER_LOGIN:
       const token = jwtDecode(action.payload.access)
       return {...state,
         isSignedIn: true,
         userId: token.user_id,
       }
-    case USER_LOGOUT:
+    case actionType.USER_LOGOUT:
       console.log("LOGOUT compoenent")
       return LOGIN_INITIAL_STATE
     default:

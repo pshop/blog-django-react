@@ -4,6 +4,7 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import Home from "./Home";
 import Log from "./Log";
 import Header from "./Header";
+import UserPage from "./UserPage";
 
 class App extends Component {
 
@@ -15,6 +16,9 @@ class App extends Component {
         <Switch>
           <Route exact path={'/log'}>
             <Log/>
+          </Route>
+          <Route exact path={'/UserPage'}>
+            <UserPage/>
           </Route>
           <Route exact path={''}>
             <Home/>

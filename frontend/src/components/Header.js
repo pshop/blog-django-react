@@ -31,7 +31,7 @@ class Header extends Component {
           <div className="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div className="navbar-nav">
               <Link className="nav-item nav-link active" to={'/'}>Home <span className="sr-only">(current)</span></Link>
-              <Link className="nav-item nav-link" to={'/myposts'}>My Posts</Link>
+              <Link className="nav-item nav-link" to={'/UserPage'}>My Posts</Link>
               <Link className="nav-item nav-link" to={'/log'}>{this.renderAuthText()}</Link>
             </div>
           </div>

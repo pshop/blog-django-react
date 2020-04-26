@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 
 import {signIn, signOut} from "../actions";
 
-
 class Log extends Component {
 
   state = {

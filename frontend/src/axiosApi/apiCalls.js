@@ -6,6 +6,19 @@ export const axiosGetPosts = () => {
   return axios.get(baseURL+'blogposts')
 }
 
+export const axiosPostPost = async  (title, content) => {
+  try {
+      const response = await axiosInstance.post('/blogposts', {
+        title: title,
+        content: content
+      });
+      axiosInstance.defaults.headers['Authorization'] = "Bearer " + localStorage.getItem('access_token');
+      return response
+    } catch (e) {
+      return e
+    }
+}
+
 export const axiosGetUser = (id) => {
   return axios.get(baseURL+'user/public/'+id)
 }
