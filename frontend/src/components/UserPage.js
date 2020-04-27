@@ -6,7 +6,7 @@ import {postPost} from "../actions";
 
 class UserPage extends Component {
 
-  store = {postContent: "", postTitle:""}
+  store = {editorContent: "", postTitle:""}
 
   handleEditorChange = (content, editor) => {
     this.setState({editorContent: content})
@@ -17,7 +17,7 @@ class UserPage extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-    this.props.postPost(this.state.postTitle, this.state.postContent)
+    this.props.postPost(this.state.postTitle, this.state.editorContent)
   }
 
   render() {

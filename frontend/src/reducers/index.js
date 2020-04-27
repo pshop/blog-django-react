@@ -47,7 +47,6 @@ const loginReducer = (state = LOGIN_INITIAL_STATE, action)=>{
         userId: token.user_id,
       }
     case actionType.USER_LOGOUT:
-      console.log("LOGOUT compoenent")
       return LOGIN_INITIAL_STATE
     default:
       return state

@@ -39,9 +39,7 @@ class UserLogoutAndBlacklistRefreshToken(APIView):
     def post(self, request):
         try:
             refresh_token = request.data["refresh_token"]
-            log(refresh_token)
             token = RefreshToken(refresh_token)
-            log(token)
             token.blacklist()
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:

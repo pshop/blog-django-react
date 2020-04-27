@@ -37,12 +37,15 @@ export const getUser = (id) => async dispatch => {
 
 export const signIn = (username = "", password = "") => async dispatch => {
   let payload = null
+  const access_token = localStorage.getItem('access_token')
+  const refresh_token = localStorage.getItem('refresh_token')
+
   // if user already has a key stored
-  if (localStorage.getItem('access_token') && localStorage.getItem('refresh_token')) {
+  if (refresh_token && refresh_token !== "undefined") {
     const access = localStorage.getItem('access_token')
     const refresh = localStorage.getItem('refresh_token')
     payload = {access, refresh}
-  } else {
+  } else if (username !== "" && password !== "") {
     const response = await axiosLoginUser(username, password)
     if (response.data) {
       localStorage.setItem('access_token', response.data.access);
@@ -59,8 +62,6 @@ export const signIn = (username = "", password = "") => async dispatch => {
     dispatch({type: actionType.USER_LOGIN, payload})
     const response = await axiosGetUser(jwtDecode(payload.access).user_id)
     dispatch({type: actionType.GET_USER_INFOS, payload: response.data})
-  } else {
-    throw "An error occured"
   }
 }
 
