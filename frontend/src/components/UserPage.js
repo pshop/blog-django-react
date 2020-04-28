@@ -3,82 +3,40 @@ import {connect} from 'react-redux';
 import {Editor} from "@tinymce/tinymce-react";
 
 import {postPost} from "../actions";
+import {PostEditor, PostElement} from "./Posts"
 
 class UserPage extends Component {
 
-  store = {editorContent: "", postTitle:""}
-
-  handleEditorChange = (content, editor) => {
-    this.setState({editorContent: content})
-  }
-  handleChange= (e) => {
-    this.setState({[e.target.name]: e.target.value});
-  }
-
-  handleSubmit = (event) => {
-    event.preventDefault()
-    this.props.postPost(this.state.postTitle, this.state.editorContent)
-  }
+  state = {editorContent: "", postTitle: ""}
 
   render() {
+
     return (
       <div className={'container mt-3'}>
         <div className={"row justify-content-md-center"}>
-          <h1>User page</h1>
+          <h1>Welcome {this.props.user.username}</h1>
         </div>
-        <div className={"row form-container"}>
-          <form onSubmit={this.handleSubmit} className={"post-form"}>
-
-            <div className={"form-group"}>
-              <label htmlFor={"postTitle"}>Title:</label>
-              <input type={"text"}
-                     className={"form-control"}
-                     id={"postTitle"}
-                     name={"postTitle"}
-                     onChange={this.handleChange}
-              />
-            </div>
-
-            <div className={"form-group"}>
-              <label>Content:</label>
-              <Editor
-                apiKey="evs6f7rd4cu933onndtg9sw3423h56syu8id6air7yf0o8db"
-                init={{
-                  height: 500,
-                  menubar: false,
-                  plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code',
-                    'insertdatetime media table paste code help wordcount'
-                  ],
-                  toolbar:
-                    'undo redo | formatselect | bold italic backcolor | \
-                    alignleft aligncenter alignright alignjustify | \
-                    bullist numlist outdent indent | removeformat | help'
-                }}
-                onEditorChange={this.handleEditorChange}
-                textareaName={"postContent"}
-              />
-            </div>
-
-            <div className={"form-group"}>
-              <button
-                type="button"
-                className="btn btn-success "
-                onClick={this.handleSubmit}>
-                Publier
-              </button>
-            </div>
-          </form>
-
+        <button className="btn btn-primary mb-3"
+                type={"button"}
+                data-toggle="collapse"
+                data-target={"#collapseEditor"}
+                aria-expanded="false"
+                aria-controls="collapseEditor">
+          Ajouter un post
+        </button>
+        <div className={"collapse"} id={'collapseEditor'}>
+          <div className={"card card-body"}>
+          <PostEditor initialState={this.state} postPost={this.props.postPost}/>
+          </div>
         </div>
+        <hr/>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  return {}
+  return {user: state.users.current_user}
 }
 
 

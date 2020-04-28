@@ -3,6 +3,8 @@ import {connect} from 'react-redux'
 import {getPostsAndUsers} from "../actions";
 import moment from "moment";
 
+import {PostElement} from "./Posts"
+
 
 class Home extends Component {
 
@@ -22,27 +24,7 @@ class Home extends Component {
   renderPosts = () => {
     return this.props.posts.map(post => {
       return (
-        <div className={'row justify-content-md-center article mt-3'} key={post.id}>
-          <div className={'col col-lg-8'}>
-            <h1>{post.title}</h1>
-            <p>
-              <small>
-                {moment(post.publication_date).format('LLLL')} by {this.getUsername(post.author)}
-              </small>
-            </p>
-
-            <div className={'content'}>
-              <p>
-                {post.content}
-              </p>
-            </div>
-            <div className={'badges'}>
-              <span className="badge badge-success">new</span>
-              <span> </span>
-              <span className="badge badge-primary">Lifestyle</span>
-            </div>
-          </div>
-        </div>
+        <PostElement post={post} username={this.getUsername(post.author)} key={post.id}/>
       )
     })
   }
