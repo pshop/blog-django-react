@@ -14,10 +14,17 @@ const LOGIN_INITIAL_STATE = {
   userId : null,
 }
 
-const postsReducer = (state = [], action) => {
+const POSTS_INITIAL_STATE = {
+  allPosts: [],
+  userPosts: []
+}
+
+const postsReducer = (state = POSTS_INITIAL_STATE, action) => {
   switch (action.type) {
     case actionType.GET_POSTS:
-      return action.payload;
+      return {...state, allPosts: action.payload}
+    case actionType.GET_USER_POSTS:
+      return {...state, userPosts: action.payload}
     case actionType.POST_POST:
       return state
     default:

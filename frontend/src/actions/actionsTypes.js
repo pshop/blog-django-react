@@ -2,6 +2,7 @@ export const GET_POSTS = 'GET_POSTS'
 export const POST_POST = 'POST_POST'
 
 export const GET_USER = 'GET_USER'
+export const GET_USER_POSTS = 'GET_USER_POSTS'
 export const GET_USER_INFOS = 'GET_USER_INFOS'
 export const DEL_USER_INFOS = 'DEL_USER_INFOS'
 

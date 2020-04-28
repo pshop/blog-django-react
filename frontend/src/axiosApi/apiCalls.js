@@ -23,6 +23,10 @@ export const axiosGetUser = (id) => {
   return axios.get(baseURL+'user/public/'+id)
 }
 
+export const axiosGetUserPosts = (userId) => {
+  return axios.get(baseURL+'blogposts/author/'+userId)
+}
+
 export const axiosLoginUser = async (username, password) => {
   try {
       const response = await axiosInstance.post('/token/obtain', {

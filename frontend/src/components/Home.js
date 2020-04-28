@@ -39,7 +39,7 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => {
-  return {posts: state.posts, users: state.users.users_list}
+  return {posts: state.posts.allPosts, users: state.users.users_list}
 }
 
 export default connect(

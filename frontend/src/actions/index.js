@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {
   axiosGetPosts,
+  axiosGetUserPosts,
   axiosPostPost,
   axiosGetUser,
   axiosLoginUser,
@@ -13,7 +14,7 @@ import * as actionType from "./actionsTypes"
 
 export const getPostsAndUsers = () => async (dispatch, getState) => {
   await dispatch(getPosts())
-  _.chain(getState().posts)
+  _.chain(getState().posts.allPosts)
     .map('author')
     .uniq()
     .forEach(id => dispatch(getUser(id)))
@@ -28,6 +29,11 @@ export const getPosts = () => async dispatch => {
 export const postPost = (title, content) => async dispatch => {
   const response = await axiosPostPost(title, content)
   dispatch({type: actionType.POST_POST})
+}
+
+export const getUserPosts = (userId) => async dispatch => {
+  const response = await axiosGetUserPosts(userId)
+  dispatch({type: actionType.GET_USER_POSTS, payload:response.data})
 }
 
 export const getUser = (id) => async dispatch => {

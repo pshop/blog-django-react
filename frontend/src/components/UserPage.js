@@ -9,8 +9,9 @@ class UserPage extends Component {
 
   state = {editorContent: "", postTitle: ""}
 
-  render() {
 
+
+  render() {
     return (
       <div className={'container mt-3'}>
         <div className={"row justify-content-md-center"}>
