@@ -33,7 +33,9 @@ export const postPost = (title, content) => async dispatch => {
 
 export const getUserPosts = (userId) => async dispatch => {
   const response = await axiosGetUserPosts(userId)
-  dispatch({type: actionType.GET_USER_POSTS, payload:response.data})
+  if (typeof response.data !== 'string'){
+    dispatch({type: actionType.GET_USER_POSTS, payload:response.data})
+  }
 }
 
 export const getUser = (id) => async dispatch => {
