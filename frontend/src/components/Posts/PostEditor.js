@@ -1,25 +1,28 @@
 import React, {Component} from 'react';
 import {Editor} from "@tinymce/tinymce-react";
+import { connect } from 'react-redux'
+
+import {postPost, editorClean, editorSave} from "../../actions";
 
 class PostEditor extends Component {
 
   constructor(props) {
     super(props);
-    const {editorContent, postTitle} = this.props.initialState
-    this.state = {editorContent, postTitle}
   }
 
   handleEditorChange = (content, editor) => {
-    this.setState({editorContent: content})
+    this.props.editorSave(this.props.title, content)
   }
   handleChange= (e) => {
-    this.setState({[e.target.name]: e.target.value});
+    this.props.editorSave(e.target.value, this.props.content)
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault()
-    this.props.postPost(this.state.postTitle, this.state.editorContent)
-    this.setState({editorContent:"", postTitle:""})
+    await this.props.postPost(this.props.title, this.props.content).then(
+      this.props.editorClean()
+    )
+
   }
 
   render() {
@@ -35,7 +38,7 @@ class PostEditor extends Component {
                      id={"postTitle"}
                      name={"postTitle"}
                      onChange={this.handleChange}
-                     value={this.state.postTitle}
+                     value={this.props.title}
               />
             </div>
 
@@ -58,7 +61,7 @@ class PostEditor extends Component {
                 }}
                 onEditorChange={this.handleEditorChange}
                 textareaName={"postContent"}
-                value={this.state.editorContent}
+                value={this.props.content}
               />
             </div>
 
@@ -77,4 +80,15 @@ class PostEditor extends Component {
   }
 }
 
-export {PostEditor};
+const mapStateToProps = state => {
+  return {
+    title : state.editor.title,
+    content: state.editor.content,
+  }
+}
+
+const postEditor = connect(mapStateToProps, {
+editorSave, editorClean, postPost
+})(PostEditor)
+
+export {postEditor as PostEditor};

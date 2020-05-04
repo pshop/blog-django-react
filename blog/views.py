@@ -34,6 +34,13 @@ class BlogPostDetail(APIView):
         serializer = BlogPostSerializer(blog_post)
         return Response(serializer.data)
 
+    def delete(self, request, blog_post_id, format=None):
+        blog_post = get_object_or_404(BlogPost, pk=blog_post_id)
+        if self.request.user.pk == blog_post.author.pk:
+            blog_post.delete()
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class BlogPostByUSer(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)

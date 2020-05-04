@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {signIn} from "../actions";
@@ -11,11 +11,18 @@ class Header extends Component {
     }
   }
 
-  renderAuthText(){
-    if (this.props.loginInfos.isSignedIn){
-      return 'Logout'
+  renderAuthText() {
+    if (this.props.loginInfos.isSignedIn) {
+      return (
+        <Fragment>
+          <Link className="nav-item nav-link" to={'/UserPage'}>My Posts</Link>
+          <Link className="nav-item nav-link" to={'/log'}>Logout</Link>
+        </Fragment>
+      )
     } else {
-      return 'Login'
+      return (
+        <Link className="nav-item nav-link" to={'/log'}>Login</Link>
+      )
     }
   }
 
@@ -31,8 +38,7 @@ class Header extends Component {
           <div className="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div className="navbar-nav">
               <Link className="nav-item nav-link active" to={'/'}>Home <span className="sr-only">(current)</span></Link>
-              <Link className="nav-item nav-link" to={'/UserPage'}>My Posts</Link>
-              <Link className="nav-item nav-link" to={'/log'}>{this.renderAuthText()}</Link>
+              {this.renderAuthText()}
             </div>
           </div>
         </nav>

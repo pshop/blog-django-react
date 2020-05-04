@@ -19,12 +19,31 @@ const POSTS_INITIAL_STATE = {
   userPosts: []
 }
 
+const EDITOR_INITIAL_STATE = {
+  title:"",
+  content:""
+}
+
+const editorReducer = (state = EDITOR_INITIAL_STATE, action) => {
+  switch (action.type) {
+    case actionType.EDITOR_SAVE:
+      return {...state, title: action.payload.title, content: action.payload.content}
+    case actionType.EDITOR_CLEAN:
+      return EDITOR_INITIAL_STATE
+    default:
+      return state
+  }
+}
+
 const postsReducer = (state = POSTS_INITIAL_STATE, action) => {
   switch (action.type) {
     case actionType.GET_POSTS:
       return {...state, allPosts: action.payload}
     case actionType.GET_USER_POSTS:
       return {...state, userPosts: action.payload}
+    case actionType.DEL_POST:
+      const postToDelete = state.userPosts.filter(post => {return post.id !== action.payload})
+      return {...state, userPosts: postToDelete}
     case actionType.POST_POST:
       return state
     default:
@@ -64,4 +83,5 @@ export default combineReducers({
   posts: postsReducer,
   users: usersReducer,
   login: loginReducer,
+  editor: editorReducer,
 });

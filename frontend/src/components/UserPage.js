@@ -1,23 +1,28 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import {Editor} from "@tinymce/tinymce-react";
 
-import {postPost, getUserPosts} from "../actions";
+import {getUserPosts, delUserPost} from "../actions";
 import {PostEditor, PostElement} from "./Posts"
 
 class UserPage extends Component {
 
-  state = {editorContent: "", postTitle: ""}
-
-  componentDidMount() {
-    this.props.getUserPosts(this.props.user.pk)
+  handleDelete = (postId) => {
+    this.props.delUserPost(postId)
   }
 
   renderUserPosts = () => {
-    return this.props.posts.map(post=>{
-      console.log(post)
+    return this.props.posts.map(post => {
       return (
-        <PostElement post={post} username={this.props.user.username} key={post.id}/>
+        <div className={"blogposts-list"} key={post.id}>
+          <div className={"blogpost"}>
+            <PostElement post={post} username={this.props.user.username}/>
+          </div>
+          <div className={"row justify-content-md-center"}>
+            <button type="button" className="btn btn-warning mr-3">Edit</button>
+            <button type="button" className="btn btn-danger" onClick={()=>this.handleDelete(post.id)}> Delete</button>
+          </div>
+        </div>
+
       )
     })
   }
@@ -38,7 +43,7 @@ class UserPage extends Component {
         </button>
         <div className={"collapse"} id={'collapseEditor'}>
           <div className={"card card-body"}>
-          <PostEditor initialState={this.state} postPost={this.props.postPost}/>
+            <PostEditor/>
           </div>
         </div>
         <hr/>
@@ -51,10 +56,13 @@ class UserPage extends Component {
 }
 
 const mapStateToProps = state => {
-  return {user: state.users.current_user, posts:state.posts.userPosts}
+  return {
+    user: state.users.current_user,
+    posts: state.posts.userPosts
+  }
 }
 
 
 export default connect(
   mapStateToProps,
-  {postPost, getUserPosts})(UserPage)
+  {getUserPosts, delUserPost})(UserPage)

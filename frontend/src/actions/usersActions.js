@@ -1,8 +1,18 @@
 import {axiosGetUser, axiosLoginUser, axiosLogoutUser} from "../axiosApi/apiCalls";
+
+import {getUserPosts} from "./postsActions";
 import * as actionType from "./actionsTypes";
 import jwtDecode from "jwt-decode";
 
-export const getUser = (id) => async dispatch => {
+export const getUser = (id) => async (dispatch, getState) => {
+  const users_list = getState().users.users_list
+
+  for (let i=0; i<users_list.length; i++){
+    if (users_list[i].pk === id){
+      return null
+    }
+  }
+
   const response = await axiosGetUser(id)
   dispatch({type: actionType.GET_USER, payload: response.data})
 }
@@ -34,6 +44,7 @@ export const signIn = (username = "", password = "") => async dispatch => {
     dispatch({type: actionType.USER_LOGIN, payload})
     const response = await axiosGetUser(jwtDecode(payload.access).user_id)
     dispatch({type: actionType.GET_USER_INFOS, payload: response.data})
+    dispatch(getUserPosts(response.data.pk))
   }
 }
 

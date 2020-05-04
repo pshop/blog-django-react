@@ -1,4 +1,4 @@
-import {axiosGetPosts, axiosGetUserPosts, axiosPostPost} from "../axiosApi/apiCalls";
+import {axiosGetPosts, axiosGetUserPosts, axiosPostPost,axiosDelUserPost} from "../axiosApi/apiCalls";
 import * as actionType from "./actionsTypes";
 import _ from "lodash";
 import {getUser} from "./index";
@@ -17,6 +17,11 @@ export const getPosts = () => async dispatch => {
   dispatch({type: actionType.GET_POSTS, payload: response.data})
 }
 
+export const delUserPost = (postId) => async dispatch => {
+  await axiosDelUserPost(postId)
+  dispatch({type:actionType.DEL_POST, payload: postId})
+}
+
 export const getUserPosts = (userId) => async dispatch => {
   const response = await axiosGetUserPosts(userId)
   if (typeof response.data !== 'string'){
@@ -24,7 +29,10 @@ export const getUserPosts = (userId) => async dispatch => {
   }
 }
 
-export const postPost = (title, content) => async dispatch => {
+export const postPost = (title, content) => async (dispatch, getState) => {
+  const userId = getState().users.current_user.pk
   const response = await axiosPostPost(title, content)
   dispatch({type: actionType.POST_POST})
+  dispatch(getUserPosts(userId))
+
 }
