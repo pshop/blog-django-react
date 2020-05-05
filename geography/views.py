@@ -1,13 +1,17 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
+from django.http import HttpResponse
+
+
 
 from .models import Continent, Country, Session, Answer
+from .forms import SetupForm
 from authentication.models import CustomUser
 
 from logging import critical as log
+from random import shuffle, choices
+import json
 
 
 class SetupSession(APIView):
@@ -19,36 +23,35 @@ class SetupSession(APIView):
         return Response("duh")
 
     def post(self, request, format=None):
+        form = SetupForm(request.POST)
+        if not form.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        trials = request.POST.get('trials')
         continent = request.POST.get('continent')
-        difficulty = request.POST.get('difficulty')
-        type = request.POST.get('type')
+        nb_trials = int(request.POST.get('nbTrials'))
+        difficulty = int(request.POST.get('difficulty'))
+        setup = []
 
-        try:
-            trials = int(trials)
-        except (ValueError, TypeError):
-            trials = 10
+        if continent:
+            countries_list = Country.objects.filter(continent__name__contains=continent)
+        else:
+            countries_list = Country.objects.all()
 
-        if trials >= 20 or trials< 10:
-            trials = 10
+        coutries_index_list = [x for x in range(len(countries_list))]
+        shuffle(coutries_index_list)
 
-        try:
-            countries = Country.objects.filter(continent__name__contains=continent)
-        except (ValueError, TypeError):
-            countries = Country.objects.all()
+        for i in range(nb_trials):
+            # un nom de pays tiré au hasard
+            setup.append({})
+            country_to_guess = countries_list[coutries_index_list[i]]
+            name_to_guess = country_to_guess.name
+            flag_to_guess = country_to_guess.flag.url
+            entry_choices = choices(countries_list.exclude(name__icontains=name_to_guess), k=difficulty)
+            entry_choices = [entry.name for entry in entry_choices]
 
-        if len(countries) == 0:
-            countries = Country.objects.all()
+            setup[i]['name_to_guess']= name_to_guess
+            setup[i]['flag_to_guess'] = flag_to_guess
+            setup[i]['entry_choices'] = entry_choices
 
-        try:
-            int(difficulty)
-        except (ValueError, TypeError):
-            difficulty = 2
-
-        if difficulty > 10 or difficulty < 2:
-            difficulty = 2
-
-        to_guess = countries
-
-        return Response(request.data, status=status.HTTP_200_OK)
+        log(setup)
+        return HttpResponse(json.dumps(setup), content_type='application/json')
