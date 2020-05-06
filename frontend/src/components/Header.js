@@ -16,6 +16,7 @@ class Header extends Component {
       return (
         <Fragment>
           <Link className="nav-item nav-link" to={'/UserPage'}>My Posts</Link>
+          <Link className={"nav-item nav-link"} to={'/geography'}>Geography</Link>
           <Link className="nav-item nav-link" to={'/log'}>Logout</Link>
         </Fragment>
       )

@@ -5,6 +5,7 @@ import Home from "./Home";
 import Log from "./Log";
 import Header from "./Header";
 import UserPage from "./UserPage";
+import GeographyPage from "./GeographyPage";
 
 class App extends Component {
 
@@ -19,6 +20,9 @@ class App extends Component {
           </Route>
           <Route exact path={'/UserPage'}>
             <UserPage/>
+          </Route>
+          <Route exact path={'/geography'}>
+            <GeographyPage/>
           </Route>
           <Route exact path={''}>
             <Home/>

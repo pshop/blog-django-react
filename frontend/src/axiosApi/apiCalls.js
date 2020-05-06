@@ -62,3 +62,17 @@ export const axiosLogoutUser = async () => {
     throw e
   }
 }
+
+export const axiosSetupGeography = async (nbTrials, continent, difficulty, exType) => {
+  try {
+    const response = await  axiosInstance.post('geography/setup', {
+      nbTrials,
+      continent,
+      difficulty,
+      exType
+    });
+    return response
+  } catch (e) {
+    throw e
+  }
+}

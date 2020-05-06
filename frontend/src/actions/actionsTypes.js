@@ -14,3 +14,5 @@ export const USER_IS_LOGGED_IN = 'USER_IS_LOGGED_IN'
 
 export const EDITOR_SAVE = 'EDITOR_SAVE'
 export const EDITOR_CLEAN = 'EDITOR_CLEAN'
+
+export const GEOGRAPHY_SETUP = 'GEOGRAPHY_SETUP'
