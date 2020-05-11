@@ -6,41 +6,37 @@ import {
   incrementCounter,
   addAnswer,
   incrementScore,
-  setType} from "../actions/geographyActions";
+  setType
+} from "../actions/geographyActions";
 
 
 class GeographyPage extends Component {
-
-  // state = {type:'ftc'}
 
   componentDidMount = () => {
     this.setup()
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-
     const paramType = this.props.match.params.type.toUpperCase()
-    const prevPropType = prevProps.type
+    const prevType = prevProps.type
 
-    console.log(prevProps.type)
-
-    if (prevState.type !== type){
-      // this.setState({type:type})
-      this.props.setType(type)
-      this.setup()
+    if (paramType !== prevType && paramType !== '') {
+      this.props.setType(paramType)
+      this.props.setupGeography(paramType)
     }
+
   }
 
   setup = async () => {
     let type = await this.props.match.params.type
     await this.props.setType(type)
-    // await this.setState({type:type})
     this.props.setupGeography(this.props.type)
   }
 
   handleAnswer = (country) => {
     const nameToGuess = this.props.setup[this.props.counter].name_to_guess
-    if (country === nameToGuess) {
+    const flagToGuess = this.props.setup[this.props.counter].flag_to_guess
+    if (country === nameToGuess || country === flagToGuess) {
       this.props.incrementScore()
       this.props.addAnswer(country, true)
     } else {
@@ -50,11 +46,25 @@ class GeographyPage extends Component {
   }
 
   displayChoices(entry_choices) {
-    return entry_choices.map(country => {
-      return <button onClick={() => this.handleAnswer(country)} type="button" className="btn btn-link btn-lg"
-                     key={country}>{country}</button>
-    })
 
+    if (this.props.type == 'FTC') {
+      return entry_choices.map(country => {
+        return <button onClick={() => this.handleAnswer(country)} type="button" className="btn btn-link btn-lg"
+                       key={country}>{country}</button>
+      })
+    } else {
+      return entry_choices.map(country => {
+        return(
+          <img
+            className={"col-md-2"}
+            style={{cursor:"pointer"}}
+            key={country}
+            onClick={() => this.handleAnswer(country)}
+            src={"http://127.0.0.1:8000" + country + "/"}/>
+        )
+
+      })
+    }
   }
 
   displayQuestion = (counter) => {
@@ -64,7 +74,12 @@ class GeographyPage extends Component {
         <div className={"container mt-3"}>
           <div className={"row justify-content-md-center"}>
             <div className={"col-6"}>
-              <img className={"img-fluid shadow"} src={"http://127.0.0.1:8000" + flag_to_guess + "/"}/>
+              {this.props.type == 'FTC' ?
+                <img className={"img-fluid shadow"} src={"http://127.0.0.1:8000" + flag_to_guess + "/"}/>:
+                <div className={"row justify-content-md-center mt-3"}>
+                 <h1>{name_to_guess}</h1>
+                </div>
+              }
             </div>
           </div>
           <div className={"row justify-content-md-center mt-3"}>
@@ -90,7 +105,7 @@ class GeographyPage extends Component {
             const flagUrl = this.props.setup[index].flag_to_guess
             let bgColor = "bg-primary"
             index++
-            if (answer.answer){
+            if (answer.answer) {
               bgColor = "bg-success"
             } else {
               bgColor = "bg-danger"
@@ -148,5 +163,6 @@ export default connect(
     incrementCounter,
     addAnswer,
     incrementScore,
-    setType}
+    setType
+  }
 )(GeographyPage);
