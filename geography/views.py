@@ -11,7 +11,7 @@ from .forms import SetupForm
 from authentication.models import CustomUser
 
 from logging import critical as log
-from random import shuffle, choices
+from random import shuffle, choices, sample
 import json
 
 
@@ -50,17 +50,26 @@ class SetupSession(APIView):
         for i in range(nb_trials):
             # un nom de pays tiré au hasard
             setup.append({})
+
+            # Queryset of the country to guess
             country_to_guess = countries_list[coutries_index_list[i]]
-            name_to_guess = country_to_guess.name
-            flag_to_guess = country_to_guess.flag.url
-            entry_choices = choices(countries_list.exclude(name__icontains=name_to_guess), k=difficulty)
-            setup[i]['name_to_guess']= name_to_guess
+            name_to_guess = country_to_guess.name  # name
+            flag_to_guess = country_to_guess.flag.url  # flag url
+
+            other_countries = countries_list.exclude(name__contains=name_to_guess)
+
+            entry_choices = sample(set(other_countries), difficulty)
+            setup[i]['name_to_guess'] = name_to_guess
             setup[i]['flag_to_guess'] = flag_to_guess
 
             if exType != 'FTC':
                 entry_choices = [entry.flag.url for entry in entry_choices]
+                entry_choices.append(flag_to_guess)
             else:
                 entry_choices = [entry.name for entry in entry_choices]
+                entry_choices.append(name_to_guess)
+
+            shuffle(entry_choices)
             setup[i]['entry_choices'] = entry_choices
 
         return HttpResponse(json.dumps(setup), content_type='application/json')

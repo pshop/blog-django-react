@@ -21,9 +21,7 @@ class App extends Component {
           <Route exact path={'/UserPage'}>
             <UserPage/>
           </Route>
-          <Route exact path={'/geography'}>
-            <GeographyPage/>
-          </Route>
+          <Route exact path={'/geography/:type'} component={GeographyPage}/>
           <Route exact path={''}>
             <Home/>
           </Route>

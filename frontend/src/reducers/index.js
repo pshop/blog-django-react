@@ -24,6 +24,14 @@ const EDITOR_INITIAL_STATE = {
   content:""
 }
 
+const GEO_INITIAL_STATE = {
+  setup:[],
+  counter:0,
+  score:0,
+  answers:[],
+  type:''
+}
+
 const editorReducer = (state = EDITOR_INITIAL_STATE, action) => {
   switch (action.type) {
     case actionType.EDITOR_SAVE:
@@ -79,9 +87,27 @@ const loginReducer = (state = LOGIN_INITIAL_STATE, action)=>{
   }
 }
 
+const geoReducer = (state = GEO_INITIAL_STATE, action)=>{
+  switch (action.type) {
+    case actionType.GEOGRAPHY_SETUP:
+      return {...state, setup: action.payload, counter: 0, score: 0}
+    case actionType.GEO_INCREMENT_COUNTER:
+      return {...state, counter: state.counter + 1}
+    case actionType.GEO_ADD_ANSWER:
+      return {...state, answers: [...state.answers, action.payload]}
+    case actionType.GEO_INCREMENT_SCORE:
+      return {...state, score: state.score + 1}
+    case actionType.GEO_SET_TYPE:
+      return {...state, type: action.payload}
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
   posts: postsReducer,
   users: usersReducer,
   login: loginReducer,
   editor: editorReducer,
+  geo: geoReducer,
 });

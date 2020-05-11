@@ -16,7 +16,17 @@ class Header extends Component {
       return (
         <Fragment>
           <Link className="nav-item nav-link" to={'/UserPage'}>My Posts</Link>
-          <Link className={"nav-item nav-link"} to={'/geography'}>Geography</Link>
+          <li className={"nav-item dropdown"}>
+            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+              Geography
+            </a>
+            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+              <Link className="nav-item nav-link"  to={'/geography/ftc'}>Flag to Country</Link>
+              <Link className="nav-item nav-link"  to={'/geography/ctf'}>Country to Flag</Link>
+            </div>
+
+          </li>
           <Link className="nav-item nav-link" to={'/log'}>Logout</Link>
         </Fragment>
       )
