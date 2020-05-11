@@ -8,6 +8,7 @@ import {
   incrementScore,
   setType
 } from "../actions/geographyActions";
+import Log from "./Log";
 
 
 class GeographyPage extends Component {
@@ -17,20 +18,17 @@ class GeographyPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const paramType = this.props.match.params.type.toUpperCase()
-    const prevType = prevProps.type
-
-    if (paramType !== prevType && paramType !== '') {
-      this.props.setType(paramType)
-      this.props.setupGeography(paramType)
+    if (this.props.type !== this.props.match.params.type.toUpperCase()){
+      this.setup()
     }
-
   }
 
   setup = async () => {
     let type = await this.props.match.params.type
-    await this.props.setType(type)
-    this.props.setupGeography(this.props.type)
+    if (type !== null && type !== "" && type !== this.props.type) {
+      await this.props.setType(type)
+      this.props.setupGeography(this.props.type)
+    }
   }
 
   handleAnswer = (country) => {
@@ -46,7 +44,6 @@ class GeographyPage extends Component {
   }
 
   displayChoices(entry_choices) {
-
     if (this.props.type == 'FTC') {
       return entry_choices.map(country => {
         return <button onClick={() => this.handleAnswer(country)} type="button" className="btn btn-link btn-lg"
@@ -54,10 +51,10 @@ class GeographyPage extends Component {
       })
     } else {
       return entry_choices.map(country => {
-        return(
+        return (
           <img
             className={"col-md-2"}
-            style={{cursor:"pointer"}}
+            style={{cursor: "pointer"}}
             key={country}
             onClick={() => this.handleAnswer(country)}
             src={"http://127.0.0.1:8000" + country + "/"}/>
@@ -75,9 +72,9 @@ class GeographyPage extends Component {
           <div className={"row justify-content-md-center"}>
             <div className={"col-6"}>
               {this.props.type == 'FTC' ?
-                <img className={"img-fluid shadow"} src={"http://127.0.0.1:8000" + flag_to_guess + "/"}/>:
+                <img className={"img-fluid shadow"} src={"http://127.0.0.1:8000" + flag_to_guess + "/"}/> :
                 <div className={"row justify-content-md-center mt-3"}>
-                 <h1>{name_to_guess}</h1>
+                  <h1>{name_to_guess}</h1>
                 </div>
               }
             </div>
@@ -91,9 +88,7 @@ class GeographyPage extends Component {
   }
 
   displayResulsts = () => {
-
     let index = 0
-
     return (
       <div className={"container"}>
         <div className="row">
@@ -128,9 +123,10 @@ class GeographyPage extends Component {
   }
 
   displayContent = (counter) => {
+
     if (counter < this.props.setup.length) {
       return this.displayQuestion(counter)
-    } else {
+    } else if (this.props.setup.length > 0) {
       return this.displayResulsts()
     }
   }

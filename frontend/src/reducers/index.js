@@ -90,7 +90,7 @@ const loginReducer = (state = LOGIN_INITIAL_STATE, action)=>{
 const geoReducer = (state = GEO_INITIAL_STATE, action)=>{
   switch (action.type) {
     case actionType.GEOGRAPHY_SETUP:
-      return {...state, setup: action.payload, counter: 0, score: 0}
+      return {...state, setup: action.payload, counter: 0, score: 0, answers: []}
     case actionType.GEO_INCREMENT_COUNTER:
       return {...state, counter: state.counter + 1}
     case actionType.GEO_ADD_ANSWER:
